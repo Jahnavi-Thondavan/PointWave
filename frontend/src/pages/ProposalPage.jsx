@@ -18,12 +18,7 @@ function ProposalPage({ user, onNavigate }) {
   const applicationId = params.get('application') || ''
   const clientView = params.get('view') === 'client'
   const projects = read('pointwave-client-projects', [])
-  const marketplaceProjects = [
-    { id:'market-react-website', title:'Build a React product website', client:'Northstar Labs', budget:'₹25,000–₹40,000', timeline:'2–3 weeks', skills:['React','UI/UX','JavaScript'], category:'Web development', description:'Build a polished marketing and product website with responsive layouts and reusable components.' },
-    { id:'market-biotech-presentation', title:'Biotech research presentation design', client:'Helix Labs', budget:'₹8,000–₹15,000', timeline:'5–7 days', skills:['PowerPoint','Research','Biology'], category:'Presentation design', description:'Turn technical research into a clear, visual presentation for an upcoming research review.' },
-    { id:'market-science-videos', title:'Edit short-form science videos', client:'Nova Media', budget:'₹12,000–₹22,000', timeline:'1–2 weeks', skills:['Video editing','YouTube','After Effects'], category:'Video editing', description:'Create a batch of concise educational videos with captions, pacing and clean visual treatment.' },
-    { id:'market-python-data', title:'Python data cleaning workflow', client:'Verde Analytics', budget:'₹18,000–₹30,000', timeline:'1–2 weeks', skills:['Python','Data analysis','Pandas'], category:'Data & software', description:'Clean and structure recurring research datasets and document a repeatable workflow.' },
-  ]
+  const marketplaceProjects = []
   const project = projects.find((item) => item.id === projectId) || marketplaceProjects.find((item) => item.id === projectId)
   const applications = read('pointwave-applications', [])
   const application = applications.find((item) => item.id === applicationId)

@@ -1,13 +1,6 @@
 import { useMemo, useState } from 'react'
 
-const TALENT = [
-  { id:'aarav-mehta', name:'Aarav Mehta', title:'Full-stack developer', skills:['React','JavaScript','Node','PostgreSQL'], rating:4.9, projects:28, categories:['Web development','Data & software'], availability:'Available now', bio:'Builds polished web products with a strong focus on responsive React interfaces and reliable backend systems.', work:['SaaS dashboard redesign','React product website'] },
-  { id:'maya-rao', name:'Maya Rao', title:'Product designer', skills:['Figma','UI/UX','Research','Prototyping'], rating:4.9, projects:19, categories:['Design & UI/UX','Research & presentation'], availability:'Available this week', bio:'Product designer who turns complex requirements into clear, usable flows, systems and prototypes.', work:['Fintech mobile flow','B2B product design system'] },
-  { id:'ishaan-verma', name:'Ishaan Verma', title:'Video editor', skills:['Video editing','After Effects','YouTube','Premiere'], rating:4.8, projects:31, categories:['Video & creative'], availability:'Available now', bio:'Creates concise, high-retention edits with clean motion, captions and platform-ready delivery.', work:['Science education series','Short-form campaign'] },
-  { id:'sara-thomas', name:'Sara Thomas', title:'Research & technical writer', skills:['Research','Writing','Biotech','Copywriting'], rating:5.0, projects:14, categories:['Writing & content','Research & presentation'], availability:'Available this week', bio:'Research-focused writer who turns technical material into clear documents, presentations and practical content.', work:['Biotech research review','Technical report series'] },
-  { id:'dev-patel', name:'Dev Patel', title:'Frontend developer', skills:['React','JavaScript','TypeScript','UI/UX'], rating:4.8, projects:22, categories:['Web development','Design & UI/UX'], availability:'Available now', bio:'Frontend specialist focused on fast, accessible interfaces and thoughtful interaction details.', work:['Commerce frontend','Analytics dashboard'] },
-  { id:'anika-shah', name:'Anika Shah', title:'Data analyst', skills:['Python','Data analysis','Pandas','Research'], rating:4.9, projects:17, categories:['Data & software','Research & presentation'], availability:'Available this week', bio:'Analyst who cleans messy datasets, finds useful patterns and documents repeatable workflows.', work:['Research data pipeline','Operations reporting'] },
-]
+const TALENT = []
 
 const readProjects = () => { try { return JSON.parse(localStorage.getItem('pointwave-client-projects') || '[]') } catch { return [] } }
 const readList = (key) => { try { return JSON.parse(localStorage.getItem(key) || '[]') } catch { return [] } }

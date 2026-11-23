@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { apiPost } from '../api/api'
 
 const categories = [
   'Web development', 'Design & UI/UX', 'Data & software', 'Writing & content',
@@ -14,12 +13,7 @@ const starterSkills = [
   'After Effects', 'YouTube', 'Pandas', 'Copywriting', 'Biotech',
 ]
 
-const talent = [
-  { name: 'Aarav Mehta', title: 'Full-stack developer', skills: ['React', 'JavaScript', 'Node', 'PostgreSQL'], rating: '4.9', projects: 28, categories: ['Web development', 'Data & software'], availability: 'Available now' },
-  { name: 'Maya Rao', title: 'Product designer', skills: ['Figma', 'UI/UX', 'Research'], rating: '4.9', projects: 19, categories: ['Design & UI/UX', 'Research & presentation'], availability: 'Available this week' },
-  { name: 'Ishaan Verma', title: 'Video editor', skills: ['Video editing', 'After Effects', 'YouTube'], rating: '4.8', projects: 31, categories: ['Video & creative'], availability: 'Available now' },
-  { name: 'Sara Thomas', title: 'Research & technical writer', skills: ['Research', 'Writing', 'Biotech', 'Copywriting'], rating: '5.0', projects: 14, categories: ['Writing & content', 'Research & presentation'], availability: 'Available this week' },
-]
+const talent = []
 
 const emptyForm = {
   title: '', description: '', category: 'Web development', skills: [], budget: '', timeline: '1–2 weeks', customTimeline: '',
@@ -72,46 +66,22 @@ function PostProjectPage({ user, onNavigate }) {
     setError(''); setStep(2); window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const publish = async () => {
-  try {
-    const project = await apiPost('/projects', {
-      title: form.title,
-      description: form.description,
-      category: form.category,
-      skills: form.skills,
-      budget: form.budget,
-      timeline: timelineText,
-    })
-
-    const publishedProject = {
-      id: project.project._id,
+  const publish = () => {
+    const project = {
+      id: `pw-${Date.now()}`,
       ...form,
       timeline: timelineText,
       client: user?.name || 'Your company',
-      status: project.project.status,
-      createdAt: project.project.createdAt,
+      status: 'Open',
+      createdAt: new Date().toISOString(),
     }
-
-    setPublishedProject(publishedProject)
+    localStorage.setItem('pointwave-client-projects', JSON.stringify([project, ...readProjects()]))
+    setPublishedProject(project)
     setStep(3)
-
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
-
-    window.history.replaceState(
-      {},
-      '',
-      `/matches?project=${publishedProject.id}`
-    )
-
-    onNavigate(`/matches?project=${publishedProject.id}`)
-  } catch (error) {
-    console.error('Failed to publish project:', error)
-    alert(error.message || 'Failed to publish project')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.history.replaceState({}, '', `/matches?project=${project.id}`)
+    onNavigate(`/matches?project=${project.id}`)
   }
-}
 
   return (
     <main className="post-project-page">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { clearLegacyPrototypeData } from './utils/clearLegacyPrototypeData'
 import './App.css'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -22,6 +23,8 @@ import WorkspacePage from './pages/WorkspacePage'
 import PaymentsPage from './pages/PaymentsPage'
 
 function App() {
+  // Remove the previous browser-only demo data once; preserve the selected theme.
+  clearLegacyPrototypeData()
   const [path, setPath] = useState(() => `${window.location.pathname || '/'}${window.location.search || ''}`)
 
   useEffect(() => {

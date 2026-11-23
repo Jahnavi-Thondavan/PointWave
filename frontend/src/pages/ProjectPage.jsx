@@ -1,13 +1,6 @@
 import { useMemo } from 'react'
 
-const TALENT = [
-  { id:'aarav-mehta', name:'Aarav Mehta', title:'Full-stack developer', skills:['React','JavaScript','Node','PostgreSQL'], rating:4.9, projects:28, categories:['Web development','Data & software'] },
-  { id:'maya-rao', name:'Maya Rao', title:'Product designer', skills:['Figma','UI/UX','Research','Prototyping'], rating:4.9, projects:19, categories:['Design & UI/UX','Research & presentation'] },
-  { id:'ishaan-verma', name:'Ishaan Verma', title:'Video editor', skills:['Video editing','After Effects','YouTube','Premiere'], rating:4.8, projects:31, categories:['Video & creative'] },
-  { id:'sara-thomas', name:'Sara Thomas', title:'Research & technical writer', skills:['Research','Writing','Biotech','Copywriting'], rating:5, projects:14, categories:['Writing & content','Research & presentation'] },
-  { id:'dev-patel', name:'Dev Patel', title:'Frontend developer', skills:['React','JavaScript','TypeScript','UI/UX'], rating:4.8, projects:22, categories:['Web development','Design & UI/UX'] },
-  { id:'anika-shah', name:'Anika Shah', title:'Data analyst', skills:['Python','Data analysis','Pandas','Research'], rating:4.9, projects:17, categories:['Data & software','Research & presentation'] },
-]
+const TALENT = []
 
 const read = (key, fallback = []) => {
   try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)) } catch { return fallback }
@@ -31,12 +24,7 @@ function ProjectPage({ user, onNavigate }) {
   const params = new URLSearchParams(window.location.search)
   const projectId = params.get('project') || ''
   const projects = read('pointwave-client-projects', [])
-  const marketplace = [
-    { id:'market-react-website', title:'Build a React product website', client:'Northstar Labs', budget:'₹25,000–₹40,000', timeline:'2–3 weeks', skills:['React','UI/UX','JavaScript'], category:'Web development', description:'Build a polished marketing and product website with responsive layouts and reusable components.' },
-    { id:'market-biotech-presentation', title:'Biotech research presentation design', client:'Helix Labs', budget:'₹8,000–₹15,000', timeline:'5–7 days', skills:['PowerPoint','Research','Biology'], category:'Presentation design', description:'Turn technical research into a clear, visual presentation for an upcoming research review.' },
-    { id:'market-science-videos', title:'Edit short-form science videos', client:'Nova Media', budget:'₹12,000–₹22,000', timeline:'1–2 weeks', skills:['Video editing','YouTube','After Effects'], category:'Video editing', description:'Create a batch of concise educational videos with captions, pacing and clean visual treatment.' },
-    { id:'market-python-data', title:'Python data cleaning workflow', client:'Verde Analytics', budget:'₹18,000–₹30,000', timeline:'1–2 weeks', skills:['Python','Data analysis','Pandas'], category:'Data & software', description:'Clean and structure recurring research datasets and document a repeatable workflow.' },
-  ]
+  const marketplace = []
   const project = projects.find((item) => item.id === projectId) || marketplace.find((item) => item.id === projectId)
 
   const profile = getProfile()
