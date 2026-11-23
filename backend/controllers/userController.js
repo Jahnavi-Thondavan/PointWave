@@ -13,7 +13,11 @@ const createUser = async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email });
+    const normalizedEmail = email.trim().toLowerCase();
+
+    const existingUser = await User.findOne({
+      email: normalizedEmail,
+    });
 
     if (existingUser) {
       return res.status(409).json({
@@ -25,11 +29,22 @@ const createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      name,
-      email,
+      name: name.trim(),
+      email: normalizedEmail,
       password: hashedPassword,
       role,
     });
+
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     const userResponse = user.toObject();
     delete userResponse.password;
@@ -37,8 +52,10 @@ const createUser = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "User created successfully",
+      token,
       user: userResponse,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,

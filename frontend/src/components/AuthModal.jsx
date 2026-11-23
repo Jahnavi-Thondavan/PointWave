@@ -1,8 +1,6 @@
+import { apiPost } from '../api/api'
 import { useState } from 'react'
 
-function readAccounts() {
-  try { return JSON.parse(localStorage.getItem('pointwave-accounts') || '{}') } catch { return {} }
-}
 
 function AuthModal({ mode, onClose, onModeChange, onAuthenticated }) {
   const [email, setEmail] = useState('')
@@ -15,34 +13,59 @@ function AuthModal({ mode, onClose, onModeChange, onAuthenticated }) {
 
   const isSignup = mode === 'signup'
 
-  const submit = (event) => {
-    event.preventDefault()
-    setError('')
-    const normalizedEmail = email.trim().toLowerCase()
-    const accounts = readAccounts()
+  const submit = async (event) => {
+event.preventDefault()
+setError('')
 
-    if (isSignup && !name.trim()) return setError('Please enter your name.')
-    if (!normalizedEmail || !normalizedEmail.includes('@')) return setError('Please enter a valid email address.')
-    if (password.length < 8) return setError('Password must be at least 8 characters.')
-    if (isSignup && password !== confirmPassword) return setError('Passwords do not match.')
+const normalizedEmail = email.trim().toLowerCase()
 
-    if (isSignup) {
-      if (accounts[normalizedEmail]) return setError('An account with this email already exists. Log in instead.')
-      const account = { name: name.trim(), email: normalizedEmail, role, profileCompleted: false }
-      accounts[normalizedEmail] = { ...account, password }
-      localStorage.setItem('pointwave-accounts', JSON.stringify(accounts))
-      localStorage.setItem('pointwave-user', JSON.stringify(account))
-      onAuthenticated?.(account, true)
-      return
-    }
+if (isSignup && !name.trim()) return setError('Please enter your name.')
+if (!normalizedEmail || !normalizedEmail.includes('@')) return setError('Please enter a valid email address.')
+if (password.length < 8) return setError('Password must be at least 8 characters.')
+if (isSignup && password !== confirmPassword) return setError('Passwords do not match.')
 
-    const stored = accounts[normalizedEmail]
-    if (!stored) return setError('No PointWave account was found for this email. Sign up first.')
-    if (stored.password !== password) return setError('That password is incorrect.')
-    const account = { name: stored.name, email: stored.email, role: stored.role, profileCompleted: Boolean(stored.profileCompleted) }
-    localStorage.setItem('pointwave-user', JSON.stringify(account))
-    onAuthenticated?.(account, false)
+try {
+if (isSignup) {
+const response = await apiPost('/users/', {
+name: name.trim(),
+email: normalizedEmail,
+password,
+role,
+})
+
+  const account = {
+    name: response.user.name,
+    email: response.user.email,
+    role: response.user.role,
+    profileCompleted: false,
   }
+
+  localStorage.setItem('pointwave-token', response.token)
+  localStorage.setItem('pointwave-user', JSON.stringify(account))
+  onAuthenticated?.(account, true)
+
+} else {
+  const response = await apiPost('/users/login', {
+    email: normalizedEmail,
+    password,
+  })
+
+  const account = {
+    name: response.user.name,
+    email: response.user.email,
+    role: response.user.role,
+    profileCompleted: Boolean(response.user.profileCompleted),
+  }
+
+  localStorage.setItem('pointwave-token', response.token)
+  localStorage.setItem('pointwave-user', JSON.stringify(account))
+  onAuthenticated?.(account, false)
+}
+
+} catch (error) {
+setError(error.message || 'Something went wrong. Please try again.')
+}
+}
 
   return (
     <div className="auth-overlay" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
